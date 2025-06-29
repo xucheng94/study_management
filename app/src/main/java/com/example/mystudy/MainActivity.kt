@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mystudy.ui.theme.MYstudyTheme
 
@@ -49,7 +51,8 @@ fun MainScreen(){
     ){paddingValues->
         NavHost(navController = navController, startDestination = "home",
             modifier = Modifier.padding(paddingValues)) {
-            composable("home") { DailyTaskScreen()  }
+            composable("home") { DailyTaskScreen() }
+            composable("profile") {ProfileScreen()  }
         }
     }
 }
@@ -58,12 +61,21 @@ fun MainScreen(){
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
+    val navBackStackEntry=navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
     NavigationBar {
-        NavigationBarItem(selected = true, onClick = {
+        NavigationBarItem(
+            selected = currentRoute=="home", onClick = {
             navController.navigate("home") },
             icon = {Icon(Icons.Filled.Home, contentDescription = "Home")},
             label ={Text("Home")}
             )
+        NavigationBarItem(
+            selected = currentRoute == "profile",
+            onClick = { navController.navigate("profile") },
+            icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Profile") },
+            label = { Text("Profile") }
+        )
     }
 
 }
@@ -72,7 +84,11 @@ fun BottomNavBar(navController: NavHostController) {
 @Composable
 fun DailyTaskScreen() {
     val tasks=listOf("report","meeting","assignment")
-    Column(modifier = Modifier.padding(16.dp)) {
+    Scaffold(floatingActionButton = {FloatingActionButton(onClick = {/*Add task*/})
+    {Icon(Icons.Filled.Add, contentDescription = "Add task") }
+    })
+    {innerPadding
+        ->Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
         Text(text = "today's tasks",
             style=MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(8.dp))
@@ -87,6 +103,12 @@ fun DailyTaskScreen() {
             }  }
         }
 
-    }
+    }  }
 }
 
+@Composable
+fun ProfileScreen(){
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("This is profile Screen")
+    }
+}
