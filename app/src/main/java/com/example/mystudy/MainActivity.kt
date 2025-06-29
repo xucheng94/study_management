@@ -23,6 +23,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import com.example.mystudy.ui.theme.MYstudyTheme
 
 
@@ -81,10 +85,12 @@ fun BottomNavBar(navController: NavHostController) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyTaskScreen() {
     val tasks=listOf("report","meeting","assignment")
-    Scaffold(floatingActionButton = {FloatingActionButton(onClick = {/*Add task*/})
+    var showDialog by remember { mutableStateOf(false) }
+    Scaffold(floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
     {Icon(Icons.Filled.Add, contentDescription = "Add task") }
     })
     {innerPadding
@@ -104,6 +110,13 @@ fun DailyTaskScreen() {
         }
 
     }  }
+    if (showDialog){
+        AlertDialog(onDismissRequest = {showDialog=false}, title = {Text("Add Task")},
+         text = {Text("This feature is not implement yet")}, confirmButton = {
+             TextButton(onClick = {showDialog=false}) { Text("close")}
+            }
+            )
+    }
 }
 
 @Composable
