@@ -90,6 +90,7 @@ fun BottomNavBar(navController: NavHostController) {
 fun DailyTaskScreen() {
     val tasks=listOf("report","meeting","assignment")
     var showDialog by remember { mutableStateOf(false) }
+    var taskname by remember {mutableStateOf("")}
     Scaffold(floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
     {Icon(Icons.Filled.Add, contentDescription = "Add task") }
     })
@@ -112,8 +113,16 @@ fun DailyTaskScreen() {
     }  }
     if (showDialog){
         AlertDialog(onDismissRequest = {showDialog=false}, title = {Text("Add Task")},
-         text = {Text("This feature is not implement yet")}, confirmButton = {
-             TextButton(onClick = {showDialog=false}) { Text("close")}
+         text = {Column { OutlinedTextField(
+             value = taskname,
+             onValueChange = {taskname=it},
+             label = {Text("Task Name")},
+             singleLine = true
+         )
+         }
+                },
+            confirmButton = {
+             TextButton(onClick = {showDialog=false}) { Text("Cancel")}
             }
             )
     }
