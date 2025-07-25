@@ -85,48 +85,7 @@ fun BottomNavBar(navController: NavHostController) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DailyTaskScreen() {
-    val tasks=listOf("report","meeting","assignment")
-    var showDialog by remember { mutableStateOf(false) }
-    var taskname by remember {mutableStateOf("")}
-    Scaffold(floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
-    {Icon(Icons.Filled.Add, contentDescription = "Add task") }
-    })
-    {innerPadding
-        ->Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
-        Text(text = "today's tasks",
-            style=MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(8.dp))
-        tasks.forEach { tasks->
-            ElevatedCard(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp))
-            {Row(modifier = Modifier.padding(16.dp)) {
-                Icon(imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp)
-                )
-                Text(tasks)
-            }  }
-        }
 
-    }  }
-    if (showDialog){
-        AlertDialog(onDismissRequest = {showDialog=false}, title = {Text("Add Task")},
-         text = {Column { OutlinedTextField(
-             value = taskname,
-             onValueChange = {taskname=it},
-             label = {Text("Task Name")},
-             singleLine = true
-         )
-         }
-                },
-            confirmButton = {
-             TextButton(onClick = {showDialog=false}) { Text("Cancel")}
-            }
-            )
-    }
-}
 
 @Composable
 fun ProfileScreen(){
