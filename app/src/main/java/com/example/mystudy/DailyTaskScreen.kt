@@ -10,12 +10,14 @@ import com.example.mystudy.viewmodel.TaskViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import com.example.mystudy.model.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailyTaskScreen() {
-    val viewModel: TaskViewModel=viewModel ()
-    val tasks = viewModel.tasks
+fun DailyTaskScreen(viewModel: TaskViewModel) {
+
+    val tasks by viewModel.tasks.collectAsState(initial = emptyList())
+
     var showDialog by remember { mutableStateOf(false) }
     var taskname by remember {mutableStateOf("")}
     Scaffold(floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
@@ -42,7 +44,7 @@ fun DailyTaskScreen() {
             confirmButton = {
                 TextButton(onClick = {
                     if (taskname.isNotBlank()) {
-                        viewModel.addTasks(taskname)
+                        viewModel.addTask(taskname)
                         taskname = ""
                     }
                     showDialog = false
@@ -60,18 +62,24 @@ fun DailyTaskScreen() {
 }
 
 @Composable
-fun TaskList(tasks:List<String>){
-    if (tasks.isEmpty()){
-        Text("No tasks yet.Click + to add me")
-    }else{
-        Column { tasks.forEach { task->
-            ElevatedCard(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                Row(modifier = Modifier.padding(16.dp)) {
-                    Icon(Icons.Filled.CheckCircle, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(task)
+fun TaskList(tasks: List<Task>) {
+    if (tasks.isEmpty()) {
+        Text("No tasks yet. Click + to add me")
+    } else {
+        Column {
+            tasks.forEach { task ->
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Row(modifier = Modifier.padding(16.dp)) {
+                        Icon(Icons.Filled.CheckCircle, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(task.name) // 注意：显示 Task 的 name 属性
+                    }
                 }
             }
-        } }
+        }
     }
 }

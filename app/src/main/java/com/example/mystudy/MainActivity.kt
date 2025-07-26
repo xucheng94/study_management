@@ -27,16 +27,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.mystudy.model.TaskDatabase
+import com.example.mystudy.model.TaskRepository
+import com.example.mystudy.viewmodel.TaskViewModel
+import com.example.mystudy.viewmodel.TaskViewModelFactory
+
 import com.example.mystudy.ui.theme.MYstudyTheme
 
 
 
 class MainActivity: ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
+        //get database sample
+        val database = TaskDatabase.getDatabase(applicationContext)
+
+       // build Repository
+        val repository = TaskRepository(database.taskDao())
+
+       // build ViewModelFactory
+        val viewModelFactory = TaskViewModelFactory(repository)
+
+       // get ViewModel sample
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(TaskViewModel::class.java)
+
         super.onCreate(savedInstanceState)
         setContent {
             MYstudyTheme {
-                MainScreen()
+                MainScreen(viewModel)
             }
         }
     }
@@ -45,7 +64,7 @@ class MainActivity: ComponentActivity(){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(){
+fun MainScreen(viewModel: TaskViewModel){
     val navController= rememberNavController()
     Scaffold(
         topBar = {TopAppBar(title = {Text("MyStudy")},
@@ -55,7 +74,7 @@ fun MainScreen(){
     ){paddingValues->
         NavHost(navController = navController, startDestination = "home",
             modifier = Modifier.padding(paddingValues)) {
-            composable("home") { DailyTaskScreen() }
+            composable("home") { DailyTaskScreen(viewModel) }
             composable("profile") {ProfileScreen()  }
         }
     }
