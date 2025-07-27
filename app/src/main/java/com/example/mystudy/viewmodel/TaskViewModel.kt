@@ -33,6 +33,13 @@ class TaskViewModel(
             repository.deleteTask(task)
         }
     }
+
+    fun clearAll() {
+        viewModelScope.launch {
+            repository.clearAll()
+        }
+    }
+
     fun getTasksByDate(date: String) {
         viewModelScope.launch {
             repository.getTasksByDate(date).collect { list ->

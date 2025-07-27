@@ -1,6 +1,8 @@
 package com.example.mystudy
 
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,13 +35,22 @@ import com.example.mystudy.model.TaskDatabase
 import com.example.mystudy.model.TaskRepository
 import com.example.mystudy.viewmodel.TaskViewModel
 import com.example.mystudy.viewmodel.TaskViewModelFactory
-
+import com.example.mystudy.ui.screen.SettingsScreen
+import com.example.mystudy.ui.screen.StatsScreen
+import androidx.compose.material.icons.filled.BarChart
+import com.example.mystudy.ui.screen.ProfileScreen
 import com.example.mystudy.ui.theme.MYstudyTheme
+import com.example.mystudy.viewmodel.ProfileViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 
+import androidx.compose.material.icons.filled.Settings
 
 
 class MainActivity: ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
+        //get  ProfileViewModel
+        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         //get database sample
         val database = TaskDatabase.getDatabase(applicationContext)
 
@@ -54,8 +65,15 @@ class MainActivity: ComponentActivity(){
 
         super.onCreate(savedInstanceState)
         setContent {
-            MYstudyTheme {
-                MainScreen(viewModel)
+            var isDarkTheme by remember { mutableStateOf(false) } // 添加主题状态
+
+            MYstudyTheme(darkTheme = isDarkTheme) {
+                MainScreen(
+                    viewModel = viewModel,
+
+                    isDarkTheme = isDarkTheme,
+                    onThemeToggle = { isDarkTheme = !isDarkTheme }
+                )
             }
         }
     }
@@ -64,8 +82,10 @@ class MainActivity: ComponentActivity(){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModel: TaskViewModel){
+fun MainScreen(viewModel: TaskViewModel, isDarkTheme: Boolean, onThemeToggle: () -> Unit){
     val navController= rememberNavController()
+    val owner = LocalViewModelStoreOwner.current
+
     Scaffold(
         topBar = {TopAppBar(title = {Text("MyStudy")},
             actions = {IconButton(onClick = {})
@@ -75,7 +95,22 @@ fun MainScreen(viewModel: TaskViewModel){
         NavHost(navController = navController, startDestination = "home",
             modifier = Modifier.padding(paddingValues)) {
             composable("home") { DailyTaskScreen(viewModel) }
-            composable("profile") {ProfileScreen()  }
+            composable("profile") {   owner?.let {
+                val profileViewModel: ProfileViewModel = viewModel(it)
+                ProfileScreen(profileViewModel)
+            }     }
+            composable("settings") {
+                SettingsScreen(
+                    onClearAllTasks = {
+                        viewModel.clearAll() // 调用 TaskViewModel 中的清空方法
+                    },
+                    isDarkTheme = isDarkTheme,
+                    onToggleDarkMode = onThemeToggle
+                )
+            }
+            composable("stats") {
+                StatsScreen(viewModel)
+            }
         }
     }
 }
@@ -99,6 +134,20 @@ fun BottomNavBar(navController: NavHostController) {
             icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Profile") },
             label = { Text("Profile") }
         )
+        NavigationBarItem(
+            selected = currentRoute == "settings",
+            onClick = { navController.navigate("settings") },
+            icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+            label = { Text("Settings") }
+        )
+        NavigationBarItem(
+            selected = currentRoute == "stats",
+            onClick = { navController.navigate("stats") },
+            icon = { Icon(Icons.Filled.BarChart, contentDescription = "Stats") },
+            label = { Text("Stats") }
+        )
+
+
     }
 
 }
@@ -106,9 +155,3 @@ fun BottomNavBar(navController: NavHostController) {
 
 
 
-@Composable
-fun ProfileScreen(){
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("This is profile Screen")
-    }
-}

@@ -72,4 +72,7 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // Material icons extended - for icons like BarChart
+    implementation("androidx.compose.material:material-icons-extended")
+
 }
