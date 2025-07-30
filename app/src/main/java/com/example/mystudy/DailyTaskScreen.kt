@@ -11,6 +11,7 @@ import com.example.mystudy.viewmodel.TaskViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.ui.graphics.Color
 import com.example.mystudy.model.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,10 +32,10 @@ fun DailyTaskScreen(viewModel: TaskViewModel) {
     }
 
 
-    Scaffold(floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
+    Scaffold(containerColor = Color(0xFFE0F2F1),floatingActionButton = {FloatingActionButton(onClick = {showDialog=true})
     {Icon(Icons.Filled.Add, contentDescription = "Add task") }
     })
-    {innerPadding
+        {innerPadding
         ->Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
         OutlinedTextField(
             value = filterDate,

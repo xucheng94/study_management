@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MYstudy" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.MyStudy" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.MyStudy.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#F5F5F5</item> <!-- background -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item> <!-- LOGO -->
+        <item name="postSplashScreenTheme">@style/Theme.MyStudy</item> <!-- theme -->
+    </style>
+
 </resources>
+
+

@@ -1,6 +1,7 @@
 package com.example.mystudy.ui.screen
 import com.example.mystudy.viewmodel.ProfileViewModel
-
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,6 +34,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFD6EAF8))
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

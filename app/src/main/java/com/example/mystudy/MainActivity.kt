@@ -43,12 +43,13 @@ import com.example.mystudy.ui.theme.MYstudyTheme
 import com.example.mystudy.viewmodel.ProfileViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.material.icons.filled.Settings
 
 
 class MainActivity: ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         //get  ProfileViewModel
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         //get database sample

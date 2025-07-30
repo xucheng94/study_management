@@ -1,5 +1,6 @@
 package com.example.mystudy.ui.screen
-
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,6 +28,7 @@ fun StatsScreen(viewModel: TaskViewModel) {
 
     Column(modifier = Modifier
         .fillMaxSize()
+        .background(Color(0xFFF0F0F0))
         .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
