@@ -58,14 +58,14 @@ fun DailyTaskScreen(viewModel: TaskViewModel) {
                 OutlinedTextField(
                     value = taskname,
                     onValueChange = { taskname = it },
-                    label = { Text("Task Name") },
+                    label = { Text("Task Name(e.g. Task01)") },
                     singleLine = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = taskDate,
                     onValueChange = { taskDate = it },
-                    label = { Text("Task Date") },
+                    label = { Text("Task Date(e.g. 2025-08-01)") },
                     singleLine = true
                 )
             }

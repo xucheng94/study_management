@@ -1,9 +1,12 @@
 package com.example.mystudy.ui.screen
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.unit.dp
 import com.example.mystudy.viewmodel.TaskViewModel
 
@@ -14,6 +17,7 @@ fun AddTaskScreen(
 ) {
     var taskName by remember { mutableStateOf("") }
     var taskDate by remember { mutableStateOf("") }
+
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -27,6 +31,8 @@ fun AddTaskScreen(
             value = taskName,
             onValueChange = { taskName = it },
             label = { Text("Task Name") },
+
+
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -35,7 +41,8 @@ fun AddTaskScreen(
         OutlinedTextField(
             value = taskDate,
             onValueChange = { taskDate = it },
-            label = { Text("Task Date") },
+            label = { Text("Task Date (e.g. 2025-08-01)") },
+
             modifier = Modifier.fillMaxWidth()
         )
 

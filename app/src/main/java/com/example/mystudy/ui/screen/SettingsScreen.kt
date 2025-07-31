@@ -6,15 +6,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun SettingsScreen(
     onClearAllTasks: () -> Unit,//clear all tasks
     isDarkTheme: Boolean,
-    onToggleDarkMode: () -> Unit
+    onToggleDarkMode: () -> Unit,
+
 ) {
     var darkModeEnabled by remember { mutableStateOf(false) }
     var notificationsEnabled by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
 
     Column(
         modifier = Modifier
@@ -46,7 +53,9 @@ fun SettingsScreen(
             Text("Notifications", modifier = Modifier.weight(1f))
             Switch(
                 checked = notificationsEnabled,
-                onCheckedChange = { notificationsEnabled = it }
+                onCheckedChange = { notificationsEnabled = it
+                    Toast.makeText(context, "Function is not implemented yet", Toast.LENGTH_SHORT).show()
+                }
             )
         }
 
@@ -66,3 +75,5 @@ fun SettingsScreen(
         )
     }
 }
+
+
