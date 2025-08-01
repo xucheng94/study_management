@@ -4,27 +4,39 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mystudy.model.Task
 import com.example.mystudy.model.TaskRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-//viewmodel class, it will be used to manage tasks in home page
 class TaskViewModel(
     private val repository: TaskRepository
 ) : ViewModel() {
+    // 主任务列表（改用主动收集模式）
+    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
+    val tasks: StateFlow<List<Task>> = _tasks
+
+    // 按日期筛选的任务列表
     private val _filteredTasks = MutableStateFlow<List<Task>>(emptyList())
     val filteredTasks: StateFlow<List<Task>> = _filteredTasks
-    val tasks: StateFlow<List<Task>> = repository.allTasks
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-    fun addTask(name: String,date: String) {
+
+    init {
+        // 启动任务列表的持续收集
         viewModelScope.launch {
-            repository.insert(Task(name = name, date = date))
+            repository.allTasks.collect { taskList ->
+                _tasks.value = taskList
+            }
+        }
+    }
+
+    fun addTask(name: String, date: String) {
+        viewModelScope.launch {
+            repository.insert(
+                Task(
+                    name = name,
+                    date = date
+                )
+            )
         }
     }
 
@@ -42,12 +54,9 @@ class TaskViewModel(
 
     fun getTasksByDate(date: String) {
         viewModelScope.launch {
-            repository.getTasksByDate(date).collect { list ->
-                _filteredTasks.value = list
+            repository.getTasksByDate(date).collect { filteredList ->
+                _filteredTasks.value = filteredList
             }
         }
     }
-
-
-
 }
