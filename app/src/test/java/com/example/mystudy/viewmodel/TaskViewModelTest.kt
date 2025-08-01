@@ -30,35 +30,25 @@ class TaskViewModelTest {
             }
         }
         viewModel = TaskViewModel(TaskRepository(fakeDao))
-        testScheduler.advanceUntilIdle() // 等待初始收集完成
+        testScheduler.advanceUntilIdle()
     }
 
     @Test
-    fun `addTask should add task to list`() = runTest(testScheduler) {
-        // 初始任务数
+    fun addTask_should_add_task_to_list() = runTest(testScheduler) {
         val initialCount = viewModel.tasks.value.size
-
-        // When
         viewModel.addTask("Test Task", "2025-08-01")
         testScheduler.advanceUntilIdle()
-
-        // Then
         assertEquals(initialCount + 1, viewModel.tasks.value.size)
-        assertTrue(viewModel.tasks.value.any { it.name == "Test Task" })
+        assertTrue(viewModel.tasks.value.any { it.name == "Test Task" }) // 检查内容
     }
 
     @Test
-    fun `deleteTask should remove task`() = runTest(testScheduler) {
-        // Given - 添加一个新任务
+    fun deleteTask_should_remove_task() = runTest(testScheduler) {
         viewModel.addTask("Task to delete", "2025-08-01")
         testScheduler.advanceUntilIdle()
         val taskToDelete = viewModel.tasks.value.last()
-
-        // When
         viewModel.deleteTask(taskToDelete)
         testScheduler.advanceUntilIdle()
-
-        // Then
         assertFalse(viewModel.tasks.value.contains(taskToDelete))
     }
 
